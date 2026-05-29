@@ -13,3 +13,13 @@ go install .
 ```shell
 go build .
 ```
+
+## Usage
+
+```shell
+flint resolve \
+  -p beats:/path/to/beats \
+  -p integrations:/path/to/integrations \
+  -t detectionrules
+  /path/to/detection-rules/rules/some_rule.toml
+```

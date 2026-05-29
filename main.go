@@ -6,9 +6,10 @@
 package main
 
 import (
+	"log/slog"
 	"os"
 
-	"github.com/taylor-swanson/flint/internal/flint"
+	"github.com/taylor-swanson/flint/internal/cmd"
 
 	_ "github.com/taylor-swanson/flint/internal/consumer/detectionrules"
 	_ "github.com/taylor-swanson/flint/internal/consumer/generic"
@@ -19,7 +20,8 @@ import (
 )
 
 func main() {
-	if ret := flint.Run(); ret != 0 {
-		os.Exit(ret)
+	if err := cmd.Execute(); err != nil {
+		slog.Error("Error running app", slog.String("error", err.Error()))
+		os.Exit(1)
 	}
 }

@@ -68,11 +68,8 @@ func PrintText(w io.Writer, report *Report, noColor bool) error {
 						return err
 					}
 				}
-				if _, err = fmt.Fprintln(w, "      Definitions:"); err != nil {
-					return err
-				}
 				if len(usage.Matches) == 0 {
-					if _, err = red.Fprintln(w, "      - MISSING DEFINITIONS!"); err != nil {
+					if _, err = red.Fprintln(w, "      - MISSING DEFINITION!"); err != nil {
 						return err
 					}
 				} else {
