@@ -1,0 +1,10 @@
+.idea/
+.claude/
+.cursor/
+.cache/
+
+.DS_Store
+
+flint.exe
+flint
+!flint/
