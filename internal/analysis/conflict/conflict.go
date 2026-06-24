@@ -1,3 +1,7 @@
+// Licensed to Elasticsearch B.V. under one or more agreements.
+// Elasticsearch B.V. licenses this file to you under the Apache 2.0 License.
+// See the LICENSE file in the project root for more information.
+
 package conflict
 
 import (
@@ -16,7 +20,6 @@ var Analyzer = &analysis.Analyzer{
 }
 
 func runUsages(pass *analysis.UsagePass) error {
-	//seen := map[string]map[string][]*field.Field{}
 	seen := map[string]map[string]map[*field.Field][]*field.Definition{}
 
 	for _, u := range pass.Usages {
