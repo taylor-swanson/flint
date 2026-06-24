@@ -7,11 +7,11 @@ package field
 import "hash/fnv"
 
 type Index struct {
-	Name    string
-	Pattern string
-	ECSRef  string
-	Version string
-	Stack   string
+	Name    string `json:"name"`
+	Pattern string `json:"pattern"`
+	ECSRef  string `json:"ecs_ref,omitempty"`
+	Version string `json:"version"`
+	Stack   string `json:"stack"`
 }
 
 func (t *Index) Hash() uint64 {

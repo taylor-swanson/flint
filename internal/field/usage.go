@@ -8,11 +8,11 @@ import "go/token"
 
 type Usage struct {
 	// Name of the field.
-	Name string
+	Name string `json:"name"`
 	// Pattern used for looking up the index.
-	Pattern string
+	Pattern string `json:"pattern"`
 	// Position of the usage.
-	Position token.Position
+	Position token.Position `json:"position"`
 	// Matches of field definitions.
-	Matches []*Definition
+	Matches []*Definition `json:"matches"`
 }

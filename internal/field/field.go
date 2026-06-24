@@ -93,9 +93,9 @@ func Join(prefix, name string) string {
 
 // Definition is a declaration of a field in an index.
 type Definition struct {
-	Field    *Field
-	Index    *Index
-	Position token.Position
+	Field    *Field         `json:"field"`
+	Index    *Index         `json:"index"`
+	Position token.Position `json:"position"`
 }
 
 func (d *Definition) Hash() uint64 {

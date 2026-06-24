@@ -2,7 +2,7 @@
 // Elasticsearch B.V. licenses this file to you under the Apache 2.0 License.
 // See the LICENSE file in the project root for more information.
 
-package flint
+package cmd
 
 import (
 	"fmt"
@@ -16,6 +16,10 @@ type kvFlag struct {
 
 func (f *kvFlag) String() string {
 	return f.Key + ":" + f.Value
+}
+
+func (f *kvFlag) Type() string {
+	return "kvFlag"
 }
 
 func (f *kvFlag) Set(value string) error {
@@ -44,6 +48,10 @@ func (f *kvListFlag) String() string {
 	}
 
 	return strings.Join(s, ", ")
+}
+
+func (f *kvListFlag) Type() string {
+	return "kvListFlag"
 }
 
 func (f *kvListFlag) Set(value string) error {
