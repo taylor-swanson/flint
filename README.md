@@ -20,6 +20,6 @@ go build .
 flint resolve \
   -p beats:/path/to/beats \
   -p integrations:/path/to/integrations \
-  -t detectionrules
+  -t detectionrules \
   /path/to/detection-rules/rules/some_rule.toml
 ```
