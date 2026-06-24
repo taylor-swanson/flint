@@ -9,12 +9,16 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
 
+	"github.com/taylor-swanson/flint/internal/analysis"
+	"github.com/taylor-swanson/flint/internal/analysis/conflict"
+	"github.com/taylor-swanson/flint/internal/analysis/definition"
+	"github.com/taylor-swanson/flint/internal/analysis/missing"
 	"github.com/taylor-swanson/flint/internal/consumer"
 	"github.com/taylor-swanson/flint/internal/field"
-	"github.com/taylor-swanson/flint/internal/flint"
 	"github.com/taylor-swanson/flint/internal/provider"
 )
 
@@ -25,6 +29,16 @@ func newCmdResolve() *cobra.Command {
 	var outputJSON bool
 	var minifyJSON bool
 	var noColor bool
+
+	analyzers := []*analysis.Analyzer{
+		conflict.Analyzer,
+		definition.Analyzer,
+		missing.Analyzer,
+	}
+	analyzerNames := make([]string, len(analyzers))
+	for i, a := range analyzers {
+		analyzerNames[i] = a.Name
+	}
 
 	cmd := &cobra.Command{
 		Use:               "resolve PATH [PATH ...]",
@@ -80,18 +94,51 @@ func newCmdResolve() *cobra.Command {
 				return fmt.Errorf("failed to get usages: %w", err)
 			}
 
-			report := flint.NewReport(usages)
+			usagesByFile := make(map[string][]field.Usage, len(args))
+			for _, u := range usages {
+				usagesByFile[u.Name] = append(usagesByFile[u.Name], u)
+			}
+
+			report := analysis.Report{
+				Timestamp:   time.Now(),
+				Analyzers:   analyzerNames,
+				Files:       args,
+				FileReports: map[string]analysis.FileReport{},
+			}
+
+			for _, filename := range report.Files {
+				fr := analysis.FileReport{UsageReports: map[string]analysis.IssueReport{}}
+
+				for _, a := range analyzers {
+					pass := analysis.UsagePass{
+						Ctx:      context.Background(),
+						Usages:   usages,
+						CacheDir: cacheDir,
+					}
+
+					if a.RunUsages != nil {
+						if err = a.RunUsages(&pass); err != nil {
+							return err
+						}
+						fr.UsageReports[a.Name] = analysis.IssueReport{
+							Issues: pass.Issues,
+						}
+					}
+				}
+
+				if len(fr.UsageReports) == 0 {
+					continue
+				}
+				report.FileReports[filename] = fr
+			}
 
 			if outputJSON {
-				err = flint.PrintJSON(os.Stdout, &report, minifyJSON)
+				err = analysis.PrintJSON(os.Stdout, &report, minifyJSON)
 			} else {
-				err = flint.PrintText(os.Stdout, &report, noColor)
-			}
-			if err != nil {
-				return fmt.Errorf("failed to print report: %w", err)
+				err = analysis.PrintText(os.Stdout, &report, !noColor)
 			}
 
-			return nil
+			return err
 		},
 	}
 
