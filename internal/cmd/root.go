@@ -19,7 +19,7 @@ func Execute() error {
 		Short:             "Field linter and lookup tool",
 		SilenceErrors:     true,
 		DisableAutoGenTag: true,
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		PersistentPreRun: func(cmd *cobra.Command, _ []string) {
 			debug, _ := cmd.Flags().GetBool("debug")
 
 			level := slog.LevelInfo

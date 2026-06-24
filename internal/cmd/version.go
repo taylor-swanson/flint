@@ -19,7 +19,7 @@ func newCmdVersion() *cobra.Command {
 		SilenceUsage:      true,
 		SilenceErrors:     true,
 		DisableAutoGenTag: true,
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			fmt.Printf("%s version %s [commit %v]\n", version.Name, version.Version, version.Commit)
 		},
 	}
